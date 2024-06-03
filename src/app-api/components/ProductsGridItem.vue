@@ -13,6 +13,7 @@
 export default {
     name: 'ProductsGridItem',
     props: ['product'],
+
 }
 </script>
 

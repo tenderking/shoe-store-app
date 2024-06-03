@@ -2,7 +2,7 @@
   <div class="grid-wrap">
     <ProductsGridItem
         v-for="product in products"
-        :key="product.id"
+        :key="product._id"
         :product="product" />
   </div>
 </template>

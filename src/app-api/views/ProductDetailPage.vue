@@ -21,9 +21,10 @@
 </template>
 
 <script>
-import axios from "axios";
+import axiosInstance from "../axios";
 
-import NotFoundPage from "./NotFoundPage";
+
+import NotFoundPage from "./NotFoundPage.vue";
 
 export default {
   name: "ProductDetailPage",
@@ -38,16 +39,17 @@ export default {
   },
 
   async created() {
-    const result = await axios.get(`/api/products/${this.$route.params.id}`);
+    const result = await axiosInstance.get(`/api/products/${this.$route.params.id}`);
+    console.log(result);
     const product = result.data;
     this.product = product;
   },
   methods: {
     async addToCart() {
-      await axios.post(
-        "api/users/12345/cart",
+      await axiosInstance.post(
+        `api/users/${import.meta.env.VITE_API_USER}/cart`,
         {
-          productId: this.$route.params.id
+            productId: this.product.id
         },
         {
           headers: {

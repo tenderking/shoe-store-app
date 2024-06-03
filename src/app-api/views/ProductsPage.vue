@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import ProductsGrid from "../components/ProductsGrid.vue";
+import axiosInstance from '../axios';
 
 export default {
   name: "ProductsPage",
@@ -19,7 +19,7 @@ export default {
     };
   },
   async created() {
-    const result = await axios.get("/api/products");
+    const result = await axiosInstance.get("/api/products");
     const products = result.data;
     this.products = products;
   }
