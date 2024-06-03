@@ -1,6 +1,7 @@
 <template>
   <div class="product-container">
-    <img class="product-image" :src="product.imageUrl" />
+    <img class="product-image" :src="product.imageUrl" :alt="product.imageUrl" />
+    
     <div class="details-wrap">
       <h3>{{ product.name }}</h3>
       <p>${{ product.price }}</p>
