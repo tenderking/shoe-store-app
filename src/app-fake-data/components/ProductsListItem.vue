@@ -45,4 +45,9 @@ export default {
   flex: 1;
   margin: auto;
 }
+.remove-button:hover {
+  background-color: red;
+  color: white;
+  transition: background-color 0.3s;
+}
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div v-if="products.length > 0">
+  <div v-if="products.length" >
     <ProductsListItem
-      v-for="product in products"
-      v-on:remove-from-cart="$emit('remove-from-cart', $event)"
+      v-for="(product,index) in products"
+      v-on:remove-from-cart="store.removeFromCart(index)"
       :key="product.id"
       :product="product"
     />
@@ -10,14 +10,12 @@
   <p v-else>You haven't added anything to your cart yet!</p>
 </template>
 
-<script>
+<script setup>
 import ProductsListItem from "./ProductsListItem.vue";
 
-export default {
-  name: "ProductsList",
-  props: ["products"],
-  components: {
-    ProductsListItem
-  }
-};
+import { useCartStore } from '../store/cartStore'
+import { computed } from "vue";
+
+const store = useCartStore();
+const products = computed(() => store.cartItems);
 </script>

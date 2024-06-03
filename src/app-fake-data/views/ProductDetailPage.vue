@@ -20,23 +20,27 @@
   <NotFoundPage v-else />
 </template>
 
-<script>
+<script setup>
+import { computed,ref } from 'vue';
 import { products } from '../fake-data';
+import NotFoundPage from "./NotFoundPage.vue";
+import { useRoute } from 'vue-router'
+import { useCartStore } from '../store/cartStore'
+const route = useRoute()
+const store = useCartStore();
 
-import NotFoundPage from "./NotFoundPage";
+const product = computed(() => {
+  return products.find((product) => product.id === route.params.id);
+});
+let showSuccessMessage = ref(false);
 
-export default {
-  name: "ProductDetailPage",
-  components: {
-    NotFoundPage
-  },
-  data() {
-    return {
-      product: products.find((p) => p.id === this.$route.params.id),
-    };
-  },
-
-  
+const addToCart = () => {
+  // Add logic to add product to cart
+  store.addToCart(route.params.id);
+  showSuccessMessage.value = true;
+  setTimeout(() => {
+    showSuccessMessage.value = false;
+  }, 2000);
 };
 </script>
 
