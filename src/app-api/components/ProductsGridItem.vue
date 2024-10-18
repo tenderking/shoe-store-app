@@ -1,12 +1,16 @@
 <template>
-    <div class="product-item">
-        <img v-bind:src="product.imageUrl" />
-        <h3 class="product-name">{{ product.name }}</h3>
-        <p class="product-price">${{ product.price }}</p>
-        <router-link v-bind:to="'/products/' + product.id">
-            <button>View Details</button>
-        </router-link>
-    </div>
+  <div class="product-item">
+    <img :src="product.imageUrl">
+    <h3 class="product-name">
+      {{ product.name }}
+    </h3>
+    <p class="product-price">
+      ${{ product.price }}
+    </p>
+    <router-link :to="'/products/' + product._id">
+      <button>View Details</button>
+    </router-link>
+  </div>
 </template>
 
 <script>

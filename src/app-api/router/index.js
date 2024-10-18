@@ -25,14 +25,30 @@ const routes = [
     redirect: "/products"
   },
   {
+    path: "/login",
+    name: "LoginPage",
+    component: () => import("../views/LoginPage.vue")
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: NotFoundPage
   }
+
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 });
+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem('userId') !== null;
+  if (to.name === 'Cart' && !isLoggedIn) {
+    next('/login'); // Redirect to login if not logged in
+  } else {
+    next(); // Otherwise, allow the navigation
+  }
+});
+
 
 export default router;

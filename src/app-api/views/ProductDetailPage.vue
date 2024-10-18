@@ -1,16 +1,29 @@
 <template>
-  <div id="page-wrap" v-if="product">
+  <div
+    v-if="product"
+    id="page-wrap"
+  >
     <div id="img-wrap">
-      <img v-bind:src="product.imageUrl" />
+      <img :src="product.imageUrl">
     </div>
     <div id="product-details">
       <h1>{{ product.name }}</h1>
-      <h3 id="price">${{ product.price }}</h3>
+      <h3 id="price">
+        ${{ product.price }}
+      </h3>
       <p>Average rating: {{ product.averageRating }}</p>
-      <button v-if="!showSucessMessage" id="add-to-cart" v-on:click="addToCart">
+      <button
+        v-if="!showSucessMessage"
+        id="add-to-cart"
+        @click="addToCart"
+      >
         Add to Cart
       </button>
-      <button v-if="showSuccessMessage" id="add-to-cart" class="green-btn">
+      <button
+        v-if="showSuccessMessage"
+        id="add-to-cart"
+        class="green-btn"
+      >
         Successfully added item to cart!
       </button>
       <h4>Description</h4>
@@ -39,22 +52,28 @@ export default {
   },
 
   async created() {
-    const result = await axiosInstance.get(`/api/products/${this.$route.params.id}`);
+    const result = await axiosInstance.get(`/api/products/${this.$route.params.id}`).then((response) => {
+      console.log(response);
+      return response.data;
+    });
     console.log(result);
     const product = result.data;
     this.product = product;
   },
   methods: {
     async addToCart() {
+      const user = localStorage.getItem("userId");
+      const token = localStorage.getItem("authToken");
       await axiosInstance.post(
-        `api/users/${import.meta.env.VITE_API_USER}/cart`,
+        `api/users/${user}/cart`,
         {
-            productId: this.product.id
+            productId: this.$route.params.id
         },
         {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        }
         }
       );
       this.showSuccessMessage = true;

@@ -1,9 +1,19 @@
 <template>
   <div id="page-wrap">
     <h1>Shopping Cart</h1>
-    <ProductsList :products="cartItems" v-on:remove-from-cart="removeFromCart($event)" />
-    <h3 id="total-price">Total: ${{ totalPrice }}</h3>
-    <button id="checkout-button">Proceed to Checkout</button>
+    <ProductsList
+      :products="cartItems"
+      @remove-from-cart="removeFromCart($event)"
+    />
+    <h3 id="total-price">
+      Total: ${{ totalPrice }}
+    </h3>
+    <button
+      id="checkout-button"
+      @click="proceedToCheckout"
+    >
+      Proceed to Checkout
+    </button>
   </div>
 </template>
 
@@ -11,6 +21,9 @@
 
 import ProductsList from "../components/ProductsList.vue";
 import  axiosInstance  from "../axios";
+import router from "../router";
+
+
 
 export default {
   name: "CartPage",
@@ -27,18 +40,50 @@ export default {
       return this.cartItems.reduce((sum, item) => sum + Number(item.price), 0);
     }
   },
-  methods: {
-    async removeFromCart(productId) {
-      const result = await axiosInstance.delete(`/api/users/${import.meta.env.VITE_API_USER}/cart/${productId}`);
-      this.cartItems = result.data;
-    }
-  },
   async created() {
-    const result = await axiosInstance.get(`/api/users/${import.meta.env.VITE_API_USER}/cart`);
+    const  user = localStorage.getItem("userId");
+    const  token = localStorage.getItem("authToken");
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    const result = await axiosInstance.get(`/api/users/${user}/cart`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((response) => {
+      console.log(response);
+      return response.data;
+    });
     const cartItems = result.data;
     this.cartItems = cartItems;
+  },
+  methods: {
+    async removeFromCart(productId) {
+      console.log("Removing product with id", productId);
+      const token = localStorage.getItem("authToken");
+      const user = localStorage.getItem("userId");
+      this.cartItems = await axiosInstance.delete(`/api/users/${user}/cart/${productId}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then((response) => {
+          console.log(response);
+          return response.data.data
+        });
+    },
+    async getUserFromStorage() {
+      const user = localStorage.getItem("userId");
+      if (user) {
+        return JSON.parse(user);
+      }
+    },
+
   }
+
 };
+
 </script>
 
 <style scoped>

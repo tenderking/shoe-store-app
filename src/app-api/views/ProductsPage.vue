@@ -19,8 +19,11 @@ export default {
     };
   },
   async created() {
-    const result = await axiosInstance.get("/api/products");
-    const products = result.data;
+    const result = await axiosInstance.get("/api/products").then((response) => {
+      console.log(response);
+      return response.data
+    });
+    const products =await result.data;
     this.products = products;
   }
 };
